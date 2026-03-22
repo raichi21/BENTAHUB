@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard - BentaHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="staff.css">
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><i class="fas fa-user-tie"></i></div>
+                <div><h4 class="sidebar-title">BentaHub</h4><p class="sidebar-subtitle">Staff</p></div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-nav-group">
+                    <a href="#dashboard" class="sidebar-nav-link active" onclick="switchPage('dashboard', event)">
+                        <i class="fas fa-home sidebar-nav-icon"></i> Dashboard
+                    </a>
+                </div>
+                <div class="sidebar-nav-group">
+                    <div class="sidebar-nav-group-title">Tasks</div>
+                    <a href="#inventory" class="sidebar-nav-link" onclick="switchPage('inventory', event)">
+                        <i class="fas fa-boxes sidebar-nav-icon"></i> Inventory Update
+                    </a>
+                    <a href="#reservations" class="sidebar-nav-link" onclick="switchPage('reservations', event)">
+                        <i class="fas fa-calendar-check sidebar-nav-icon"></i> Reservations
+                    </a>
+                    <a href="#pickup" class="sidebar-nav-link" onclick="switchPage('pickup', event)">
+                        <i class="fas fa-box sidebar-nav-icon"></i> Prepare Pickups
+                    </a>
+                </div>
+                <div class="sidebar-nav-group">
+                    <a href="#" class="sidebar-nav-link" onclick="logout(event)">
+                        <i class="fas fa-sign-out-alt sidebar-nav-icon"></i> Logout
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <h2 class="page-title" id="pageTitle">Dashboard</h2>
+                <div class="top-bar-right">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">S</div>
+                        <div class="user-details"><h4 id="userName">Staff</h4><p id="userRole">Staff Member</p></div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+
+            <div id="pageContent">
+                <!-- Dashboard -->
+                <div id="dashboard" class="page active">
+                    <div class="page-header">
+                        <h1>Staff Dashboard</h1>
+                        <p>View transactions and inventory updates</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="stat-icon fas fa-clipboard"></i>
+                            <p class="stat-label">Today's Tasks</p>
+                            <p class="stat-value">5</p>
+                        </div>
+                        <div class="stat-card success">
+                            <i class="stat-icon fas fa-check"></i>
+                            <p class="stat-label">Completed</p>
+                            <p class="stat-value">3</p>
+                        </div>
+                        <div class="stat-card warning">
+                            <i class="stat-icon fas fa-history"></i>
+                            <p class="stat-label">Pending</p>
+                            <p class="stat-value">2</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header"><h3>Recent Transactions</h3></div>
+                        <div class="section-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr><th>Date</th><th>Type</th><th>Details</th><th>Status</th></tr>
+                                    </thead>
+                                    <tbody id="transactionTable">
+                                        <tr>
+                                            <td>2024-03-22</td>
+                                            <td><span class="badge badge-success">Sale</span></td>
+                                            <td>Transaction S001</td>
+                                            <td><span class="badge badge-success">Completed</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inventory Update -->
+                <div id="inventory" class="page">
+                    <div class="page-header">
+                        <h1>Inventory Update</h1>
+                        <p>Scan QR codes and update stock levels</p>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header"><h3>QR Code Scanner</h3></div>
+                        <div class="section-body">
+                            <div style="text-align: center; padding: var(--spacing-lg);">
+                                <i class="fas fa-camera" style="font-size: 3rem; color: var(--text-tertiary); margin-bottom: var(--spacing-md);"></i>
+                                <p>QR Scanner (Demo Mode)</p>
+                                <input type="text" id="qrCode" placeholder="Scan QR code..." style="margin: var(--spacing-md) 0;">
+                                <input type="number" id="qrQuantity" placeholder="Quantity" style="margin: 0 var(--spacing-md);">
+                                <button class="btn btn-primary" onclick="updateInventoryQR()">
+                                    <i class="fas fa-plus"></i> Add Stock
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header"><h3>Stock Updates</h3></div>
+                        <div class="section-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr><th>Product</th><th>Previous Stock</th><th>Added</th><th>Current Stock</th><th>Time</th></tr>
+                                    </thead>
+                                    <tbody id="stockUpdatesTable">
+                                        <tr>
+                                            <td>Rice (1kg)</td>
+                                            <td>150</td>
+                                            <td>+20</td>
+                                            <td>170</td>
+                                            <td>10:30 AM</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reservations -->
+                <div id="reservations" class="page">
+                    <div class="page-header">
+                        <h1>Manage Reservations</h1>
+                        <p>View reserved items and generate receipts</p>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>Confirmed Reservations</h3>
+                            <button class="btn btn-small" onclick="generateReceipt()">
+                                <i class="fas fa-receipt"></i> Generate Receipt
+                            </button>
+                        </div>
+                        <div class="section-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr><th>Customer</th><th>Items</th><th>Pickup Date</th><th>Status</th><th>Actions</th></tr>
+                                    </thead>
+                                    <tbody id="reservationTable">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prepare Pickups -->
+                <div id="pickup" class="page">
+                    <div class="page-header">
+                        <h1>Prepare for Pickup</h1>
+                        <p>Prepare items for customer pickup</p>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header"><h3>Items Ready for Pickup</h3></div>
+                        <div class="section-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Status</th><th>Actions</th></tr>
+                                    </thead>
+                                    <tbody id="pickupTable">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="mockData.js"></script>
+    <script src="staff.js"></script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Portal - BentaHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="customer.css">
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><i class="fas fa-shopping-bag"></i></div>
+                <div><h4 class="sidebar-title">BentaHub</h4><p class="sidebar-subtitle">Customer</p></div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-nav-group">
+                    <a href="#home" class="sidebar-nav-link active" onclick="switchPage('home', event)">
+                        <i class="fas fa-home sidebar-nav-icon"></i> Home
+                    </a>
+                </div>
+                <div class="sidebar-nav-group">
+                    <div class="sidebar-nav-group-title">Services</div>
+                    <a href="#browse" class="sidebar-nav-link" onclick="switchPage('browse', event)">
+                        <i class="fas fa-store sidebar-nav-icon"></i> Browse Products
+                    </a>
+                    <a href="#reservation" class="sidebar-nav-link" onclick="switchPage('reservation', event)">
+                        <i class="fas fa-calendar-check sidebar-nav-icon"></i> Make Reservation
+                    </a>
+                    <a href="#myorders" class="sidebar-nav-link" onclick="switchPage('myorders', event)">
+                        <i class="fas fa-box sidebar-nav-icon"></i> My Orders
+                    </a>
+                </div>
+                <div class="sidebar-nav-group">
+                    <a href="#" class="sidebar-nav-link" onclick="logout(event)">
+                        <i class="fas fa-sign-out-alt sidebar-nav-icon"></i> Logout
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <h2 class="page-title" id="pageTitle">Welcome</h2>
+                <div class="top-bar-right">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">C</div>
+                        <div class="user-details"><h4 id="userName">Customer</h4><p>Customer</p></div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+
+            <div id="pageContent">
+                <!-- Home Page -->
+                <div id="home" class="page active">
+                    <div class="page-header">
+                        <h1>Welcome to BentaHub</h1>
+                        <p>Your trusted sari sari store with multiple branches</p>
+                    </div>
+
+                    <div class="grid grid-cols-3" style="margin-bottom: var(--spacing-xl);">
+                        <div class="stat-card">
+                            <i class="stat-icon fas fa-store"></i>
+                            <p class="stat-label">Our Branches</p>
+                            <p class="stat-value">4</p>
+                        </div>
+                        <div class="stat-card success">
+                            <i class="stat-icon fas fa-box"></i>
+                            <p class="stat-label">Products</p>
+                            <p class="stat-value">12+</p>
+                        </div>
+                        <div class="stat-card warning">
+                            <i class="stat-icon fas fa-clock"></i>
+                            <p class="stat-label">Hours</p>
+                            <p class="stat-value">Daily</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header"><h3>Our Branches</h3></div>
+                        <div class="section-body">
+                            <div class="grid grid-cols-2" id="branchGrid">
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <!-- Browse Products -->
+                <div id="browse" class="page">
+                    <div class="page-header">
+                        <h1>Browse Our Products</h1>
+                        <p>Select your preferred branch to see available products</p>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>Select Branch</h3>
+                        </div>
+                        <div class="section-body">
+                            <select id="browsingBranch" onchange="loadBranchProducts()" class="form-control" style="max-width: 300px;">
+                                <option value="B001">Lourdes Main Branch</option>
+                                <option value="B002">Downtown Branch</option>
+                                <option value="B003">Westside Branch</option>
+                                <option value="B004">Market District Branch</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header"><h3>Available Products</h3></div>
+                        <div class="section-body">
+                            <div class="product-browse-grid" id="browseProductGrid">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Make Reservation -->
+                <div id="reservation" class="page">
+                    <div class="page-header">
+                        <h1>Make a Reservation</h1>
+                        <p>Reserve items from your preferred branch</p>
+                    </div>
+
+                    <div class="grid grid-cols-2">
+                        <div class="section">
+                            <div class="section-header"><h3>Select Items</h3></div>
+                            <div class="section-body">
+                                <div id="reservationProducts"></div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <div class="section-header"><h3>Reservation Summary</h3></div>
+                            <div class="section-body">
+                                <div class="form-group">
+                                    <label>Branch</label>
+                                    <select id="reservationBranch" class="form-control">
+                                        <option value="B001">Lourdes Main Branch</option>
+                                        <option value="B002">Downtown Branch</option>
+                                        <option value="B003">Westside Branch</option>
+                                        <option value="B004">Market District Branch</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Pickup Date</label>
+                                    <input type="date" id="pickupDate" class="form-control">
+                                </div>
+
+                                <div class="reservation-items" id="reservationItems">
+                                    <p class="text-muted">No items selected</p>
+                                </div>
+
+                                <button class="btn btn-primary btn-block" onclick="submitReservation()">
+                                    <i class="fas fa-check"></i> Confirm Reservation
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Orders -->
+                <div id="myorders" class="page">
+                    <div class="page-header">
+                        <h1>My Orders & Reservations</h1>
+                        <p>Track your orders and manage reservations</p>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header"><h3>Active Reservations</h3></div>
+                        <div class="section-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr><th>ID</th><th>Items</th><th>Pickup Date</th><th>Status</th><th>Actions</th></tr>
+                                    </thead>
+                                    <tbody id="myOrdersTable">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header"><h3>Payment & Pickup</h3></div>
+                        <div class="section-body">
+                            <div class="grid grid-cols-2">
+                                <div>
+                                    <h4>Select Payment Method</h4>
+                                    <div style="display: flex; gap: var(--spacing-md); margin-top: var(--spacing-md);">
+                                        <button class="btn btn-primary" onclick="selectPayment('cash')">
+                                            <i class="fas fa-money-bill"></i> Cash
+                                        </button>
+                                        <button class="btn btn-secondary" onclick="selectPayment('gcash')">
+                                            <i class="fas fa-mobile-alt"></i> GCash
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4>Choose Pickup Branch</h4>
+                                    <select id="pickupBranch" class="form-control" style="margin-top: var(--spacing-md);">
+                                        <option value="B001">Lourdes Main Branch</option>
+                                        <option value="B002">Downtown Branch</option>
+                                        <option value="B003">Westside Branch</option>
+                                        <option value="B004">Market District Branch</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-success btn-block" style="margin-top: var(--spacing-lg);" onclick="completeOrder()">
+                                <i class="fas fa-check"></i> Ready for Pickup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="mockData.js"></script>
+    <script src="customer.js"></script>
+</body>
+</html>

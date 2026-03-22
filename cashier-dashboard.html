@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashier Dashboard - BentaHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="cashier.css">
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><i class="fas fa-cash-register"></i></div>
+                <div><h4 class="sidebar-title">BentaHub</h4><p class="sidebar-subtitle">Cashier</p></div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-nav-group">
+                    <a href="#pos" class="sidebar-nav-link active" onclick="switchPage('pos', event)">
+                        <i class="fas fa-cash-register sidebar-nav-icon"></i> POS System
+                    </a>
+                </div>
+                <div class="sidebar-nav-group">
+                    <div class="sidebar-nav-group-title">Operations</div>
+                    <a href="#monitoring" class="sidebar-nav-link" onclick="switchPage('monitoring', event)">
+                        <i class="fas fa-eye sidebar-nav-icon"></i> Stock Check
+                    </a>
+                    <a href="#reservations" class="sidebar-nav-link" onclick="switchPage('reservations', event)">
+                        <i class="fas fa-calendar-check sidebar-nav-icon"></i> Reservations
+                    </a>
+                    <a href="#payments" class="sidebar-nav-link" onclick="switchPage('payments', event)">
+                        <i class="fas fa-money-bill-wave sidebar-nav-icon"></i> Payments
+                    </a>
+                </div>
+                <div class="sidebar-nav-group">
+                    <a href="#" class="sidebar-nav-link" onclick="logout(event)">
+                        <i class="fas fa-sign-out-alt sidebar-nav-icon"></i> Logout
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <h2 class="page-title" id="pageTitle">Point of Sale System</h2>
+                </div>
+                <div class="top-bar-right">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">C</div>
+                        <div class="user-details">
+                            <h4 id="userName">Cashier</h4>
+                            <p id="userRole">Cashier</p>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+
+            <div id="pageContent">
+                <!-- POS System Page -->
+                <div id="pos" class="page active">
+                    <div class="pos-container">
+                        <div class="pos-main">
+                            <!-- Product Selection -->
+                            <div class="section">
+                                <div class="section-header">
+                                    <h3>Product Selection</h3>
+                                    <input type="text" id="searchProduct" placeholder="Search products..." style="width: 200px;">
+                                </div>
+                                <div class="section-body product-grid" id="productGrid">
+                                    <!-- Products loaded by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- POS Cart Sidebar -->
+                        <div class="pos-sidebar">
+                            <div class="section">
+                                <div class="section-header">
+                                    <h3>Current Transaction</h3>
+                                </div>
+                                <div class="pos-cart" id="posCart">
+                                    <div class="empty-state">
+                                        <div class="empty-icon"><i class="fas fa-shopping-cart"></i></div>
+                                        <p class="empty-message">No items added</p>
+                                    </div>
+                                </div>
+                                <div class="pos-totals">
+                                    <div class="total-row">
+                                        <span>Subtotal:</span>
+                                        <span id="subtotal">₱0.00</span>
+                                    </div>
+                                    <div class="total-row">
+                                        <span>Discount:</span>
+                                        <input type="number" id="discount" placeholder="0" style="width: 80px;">
+                                    </div>
+                                    <div class="total-row grand-total">
+                                        <span>Total:</span>
+                                        <span id="grandTotal">₱0.00</span>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Methods -->
+                                <div class="payment-methods">
+                                    <h4>Payment Method</h4>
+                                    <div class="method-buttons">
+                                        <button class="btn btn-small method-btn active" onclick="selectPaymentMethod('cash')">
+                                            <i class="fas fa-money-bill"></i> Cash
+                                        </button>
+                                        <button class="btn btn-small method-btn" onclick="selectPaymentMethod('gcash')">
+                                            <i class="fas fa-mobile-alt"></i> GCash
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="pos-actions">
+                                    <button class="btn btn-block btn-primary" onclick="completeSale()">
+                                        <i class="fas fa-check"></i> Complete Sale
+                                    </button>
+                                    <button class="btn btn-block btn-secondary" onclick="cancelSale()">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stock Monitoring Page -->
+                <div id="monitoring" class="page">
+                    <div class="page-header">
+                        <h1>Stock Availability Check</h1>
+                    </div>
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>Current Branch Inventory</h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th>Status</th>
+                                            <th>Reorder Level</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="inventoryTable">
+                                        <!-- Loaded by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reservations Page -->
+                <div id="reservations" class="page">
+                    <div class="page-header">
+                        <h1>Confirm Reservations</h1>
+                    </div>
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>Pending Reservations</h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Customer</th>
+                                            <th>Items</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reservationTable">
+                                        <!-- Loaded by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payments Page -->
+                <div id="payments" class="page">
+                    <div class="page-header">
+                        <h1>Validate Payments</h1>
+                    </div>
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>Payment Validation</h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="grid grid-cols-3" style="margin-bottom: var(--spacing-lg);">
+                                <div>
+                                    <label>Transaction ID</label>
+                                    <input type="text" id="paymentTransactionId" placeholder="Enter transaction ID">
+                                </div>
+                                <div>
+                                    <label>Amount</label>
+                                    <input type="number" id="paymentAmount" placeholder="0.00">
+                                </div>
+                                <div style="align-self: flex-end;">
+                                    <button class="btn btn-primary" onclick="validatePayment()">
+                                        <i class="fas fa-check"></i> Validate
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="mockData.js"></script>
+    <script src="cashier.js"></script>
+</body>
+</html>
